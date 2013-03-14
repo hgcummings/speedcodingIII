@@ -22,22 +22,26 @@ namespace Problem1
     private static bool IsKaprekarNumber(long current)
     {
       long square = current * current;
+      var splitPoint = 0;
 
-      int digits = square.ToString("X").Length;
-
-      for (int splitPoint = 0; splitPoint < digits; splitPoint++)
+      while (true)
       {
-        int shift = 4*splitPoint;
+        ++splitPoint;
+        var shift = 4 * splitPoint;
+
         var upperPart = square >> (shift);
+        if (upperPart == 0)
+        {
+          return false;
+        }
+
         var lowerPart = square - (upperPart << (shift));
-        if (lowerPart > 0 & upperPart > 0 && lowerPart + upperPart == current)
+        if (lowerPart > 0 && lowerPart + upperPart == current)
         {
           Console.WriteLine("{0} squared = {1}, {0} = {2} + {3}", current.ToString("X"), square.ToString("X"), upperPart.ToString("X"), lowerPart.ToString("X"));
           return true;
         }
       }
-
-      return false;
     }
   }
 }
