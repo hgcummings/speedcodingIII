@@ -31,15 +31,15 @@ namespace Problem3
           var green = 0;
           var blue = 0;
 
-          int mask = 1;
+          int mask = 2;
 
           for (var bit = 0; bit < 8; bit++)
           {
             var currentPixel = bitmap.GetPixel((i*3) + (bit%3), (j*3) + (bit/3));
 
-            red += (currentPixel.R & mask) << bit;
-            green += (currentPixel.G & mask) << bit;
-            blue += (currentPixel.B & mask) << bit;
+            red += (currentPixel.R & mask) << (bit - 1);
+            green += (currentPixel.G & mask) << (bit - 1);
+            blue += (currentPixel.B & mask) << (bit - 1);
           }
 
           hiddenBitmap.SetPixel(i, j, Color.FromArgb(255, red, green, blue));
