@@ -26,11 +26,13 @@ namespace Problem3
     {
       var source = (Bitmap)Image.FromFile(sourcePath);
 
-      for (int mask = 1; mask < 3; mask *= 2)
+      for (int pow = 0; pow < 4; pow++)
       {
-        var newPrefix = String.Format("{0}{1}_", prefix, mask);
+        var newPrefix = String.Format("{0}{1}_", prefix, pow);
 
         var hiddenBitmap = new Bitmap(width = source.Width/Stride, height = source.Height/Stride);
+
+        var blank = true;
 
         for (int i = 0; i < width; i++)
         {
@@ -46,24 +48,36 @@ namespace Problem3
               {
                 var currentPixel = source.GetPixel((i*Stride) + (bit%Stride), (j*Stride) + (bit/Stride));
 
-                red += (currentPixel.R & mask) << (bit - mask + 1);
-                green += (currentPixel.G & mask) << (bit - mask + 1);
-                blue += (currentPixel.B & mask) << (bit - mask + 1);
+                var mask = Convert.ToInt32(Math.Pow(2, pow));
+
+                red += (currentPixel.R & mask) << (bit - pow);
+                green += (currentPixel.G & mask) << (bit - pow);
+                blue += (currentPixel.B & mask) << (bit - pow);
               }
 
+            }
+
+            if (blank && (red > 0 || green > 0 || blue > 0))
+            {
+              blank = false;
             }
 
             hiddenBitmap.SetPixel(i, j, Color.FromArgb(255, red, green, blue));
           }
         }
 
-        var filename = newPrefix.TrimEnd('_') + ".png";
-        hiddenBitmap.Save(filename, ImageFormat.Png);
-
-        if (width > 3)
+        if (!blank)
         {
-          GenerateImages(filename, newPrefix);
+          var filename = newPrefix.TrimEnd('_') + ".png";
+          hiddenBitmap.Save(filename, ImageFormat.Png);
+
+          if (newPrefix.Length < 6)
+          {
+            GenerateImages(filename, newPrefix);
+          }
         }
+
+
       }
 
     }
