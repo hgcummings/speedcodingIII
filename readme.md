@@ -1,0 +1,1 @@
+My solutions to Softwire's third speed coding competition
